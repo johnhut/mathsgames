@@ -27,7 +27,7 @@ HEIGHT = 150
 
 
 class Tui10s:
-    class Colour():
+    class Colour:
         BLACK = (0, 0, 0)
         WHITE = (255, 255, 255)
         RED = (255, 0, 0)
@@ -38,28 +38,41 @@ class Tui10s:
         self.game_display = set_mode((self.width, self.height))
         set_caption("Tui 10s")
         self.clock = Clock()
+        self.queue = []
+        self.x = 0
+        self.reset()
 
-    def message_display(self, text):
+    def reset(self):
+        self.queue = []
+        self.x = self.width
+
+    def message_display(self, text, x):
         large_text = Font("freesansbold.ttf", 115)
         text_surface = large_text.render(text, True, self.Colour.BLACK)
-        text_rectangle = text_surface.get_rect().center = (
-            (self.width / 2),
+        text_rectangle = text_surface.get_rect().left = (
+            x,
             (self.height / 2),
         )
         self.game_display.blit(text_surface, text_rectangle)
-
         update()
 
-        time.sleep(2)
-
-        self.game_loop()
+    def bump(self):
+        text = " ".join(self.queue)
+        large_text = Font("freesansbold.ttf", 115)
+        text_surface = large_text.render(text, True, self.Colour.BLACK)
+        text_rectangle = text_surface.get_rect().left = (
+            self.x,
+            (self.height / 2),
+        )
+        self.game_display.blit(text_surface, text_rectangle)
+        update()
 
     def game_loop(self):
         x = self.width
-        y = self.height * 0.1
-        key_active = False
+        key_active = None
 
         gameExit = False
+        self.message_display(self.queue, x)
 
         while not gameExit:
 
