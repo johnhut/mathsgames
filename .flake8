@@ -1,0 +1,6 @@
+[flake8]
+# Aligning flake8 to black's 88 line limit recommendation
+max-line-length = 88
+exclude = .svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,.venv,.venv32,venv,venv32
+per-file-ignores =
+    src/restapi/__init__.py:F401
