@@ -1,87 +1,89 @@
-import pygame
+from pygame.time import Clock
+from pygame.font import Font
+from pygame.display import set_mode, set_caption, update
+from pygame.event import get
+from pygame import (
+    init,
+    quit as pgquit,
+    QUIT,
+    KEYDOWN,
+    KEYUP,
+    K_0,
+    K_1,
+    K_2,
+    K_3,
+    K_4,
+    K_5,
+    K_6,
+    K_7,
+    K_8,
+    K_9,
+)
+from enum import Enum
 import time
 
-pygame.init()
-
-display_width = 800
-display_height = 150
-
-black = (0, 0, 0)
-white = (255, 255, 255)
-red = (255, 0, 0)
-
-car_width = 73
-
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption("Tui 10s")
-clock = pygame.time.Clock()
-
-carImg = pygame.image.load(r"data/Tui.png")
+WIDTH = 800
+HEIGHT = 150
 
 
-def car(x, y):
-    gameDisplay.blit(carImg, (x, y))
+class Tui10s:
+    class Colour():
+        BLACK = (0, 0, 0)
+        WHITE = (255, 255, 255)
+        RED = (255, 0, 0)
+
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.game_display = set_mode((self.width, self.height))
+        set_caption("Tui 10s")
+        self.clock = Clock()
+
+    def message_display(self, text):
+        large_text = Font("freesansbold.ttf", 115)
+        text_surface = large_text.render(text, True, self.Colour.BLACK)
+        text_rectangle = text_surface.get_rect().center = (
+            (self.width / 2),
+            (self.height / 2),
+        )
+        self.game_display.blit(text_surface, text_rectangle)
+
+        update()
+
+        time.sleep(2)
+
+        self.game_loop()
+
+    def game_loop(self):
+        x = self.width
+        y = self.height * 0.1
+        key_active = False
+
+        gameExit = False
+
+        while not gameExit:
+
+            for event in get():
+                if event.type == QUIT:
+                    pgquit()
+                    quit()
+
+                if event.type == KEYDOWN:
+                    if event.key == K_0:
+                        key_active = K_0
+
+                if event.type == KEYUP:
+                    if event.key == K_0:
+                        key_active = None
+
+            self.game_display.fill(self.Colour.WHITE)
+
+            update()
+            self.clock.tick(60)
 
 
-def text_objects(text, font):
-    textSurface = font.render(text, True, black)
-    return textSurface, textSurface.get_rect()
-
-
-def message_display(text):
-    largeText = pygame.font.Font("freesansbold.ttf", 115)
-    TextSurf, TextRect = text_objects(text, largeText)
-    TextRect.center = ((display_width / 2), (display_height / 2))
-    gameDisplay.blit(TextSurf, TextRect)
-
-    pygame.display.update()
-
-    time.sleep(2)
-
-    game_loop()
-
-
-def crash():
-    message_display("You Crashed")
-
-
-def game_loop():
-    x = display_width * 0.45
-    y = display_height * 0.1
-
-    x_change = 0
-
-    gameExit = False
-
-    while not gameExit:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    x_change = -5
-                if event.key == pygame.K_RIGHT:
-                    x_change = 5
-
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    x_change = 0
-
-        x += x_change
-
-        gameDisplay.fill(white)
-        car(x, y)
-
-        if x > display_width - car_width or x < 0:
-            crash()
-
-        pygame.display.update()
-        clock.tick(60)
-
-
-game_loop()
-pygame.quit()
-quit()
+if __name__ == "__main__":
+    init()
+    Tui10s(WIDTH, HEIGHT).game_loop()
+    pgquit()
+    quit()
